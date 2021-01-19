@@ -1,4 +1,4 @@
-import e, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 /**
  * 拦截rul
@@ -33,6 +33,18 @@ export const defaultErrorHandler = (
   }
   let statusCode: number, message: string;
   switch (error.message) {
+    case 'NAME_IS_REQUIRED':
+      statusCode = 400;
+      message = '用户名不能为空';
+      break;
+    case 'PASSWORD_IS_REQUIRED':
+      statusCode = 400;
+      message = '用户密码不能为空';
+      break;
+    case 'USER_ALREADY_EXIST':
+      statusCode = 409;
+      message = '用户名已存在';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';
