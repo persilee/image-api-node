@@ -7,10 +7,12 @@ logs
 npm-debug.log
 
 .vscode/*
+!.vscode/image-api.code-snippets
 !.vscode/settings.json
-!vscode/tasks.json
-!vscode/launch.json
-!vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 .env*
 config/*.key
+/uploads
