@@ -1,5 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 
+/**
+ * 拦截rul
+ * @param request
+ * @param response
+ * @param next
+ */
 export const requestUrl = (
   request: Request,
   response: Response,
@@ -8,12 +14,23 @@ export const requestUrl = (
   console.log(request.url);
   next();
 };
+
+/**
+ * 异常处理
+ * @param error
+ * @param request
+ * @param response
+ * @param next
+ */
 export const defaultErrorHandler = (
   error: any,
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
+  if (error.message) {
+    console.log(`🤔 ${error.message}`);
+  }
   let statusCode: number, message: string;
   switch (error.message) {
     default:
@@ -21,5 +38,9 @@ export const defaultErrorHandler = (
       message = '服务请求失败';
       break;
   }
-  response.status(statusCode).send({ message });
+  response.status(statusCode).send({
+    code: statusCode,
+    message: message,
+    data: [],
+  });
 };
