@@ -15,13 +15,25 @@ export const createUser = async (user: UserModel) => {
   return data;
 };
 
+interface GetUserOptions {
+  password?: boolean;
+}
+
 /**
  * 根据用户名查找用户
  * @param name
  */
-export const getUserByName = async (name: string) => {
+export const getUserByName = async (
+  name: string,
+  options: GetUserOptions = {},
+) => {
+  const { password } = options;
   const sql = `
-    SELECT id, name FROM user
+    SELECT 
+      id, 
+      name
+      ${password ? ',password' : ''}
+    FROM user
     WHERE name = ?
   `;
   const [data] = await connection.promise().query(sql, name);

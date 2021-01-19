@@ -25,8 +25,10 @@ export const store = async (
   next: NextFunction,
 ) => {
   const { title, content } = request.body;
+  const { id: userId } = request.user;
+
   try {
-    const data = await createPost({ title, content });
+    const data = await createPost({ title, content, userId });
     response.send({
       code: 200,
       data: data,

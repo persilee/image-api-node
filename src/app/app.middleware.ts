@@ -45,6 +45,18 @@ export const defaultErrorHandler = (
       statusCode = 409;
       message = '用户名已存在';
       break;
+    case 'USER_NOT_EXIST':
+      statusCode = 400;
+      message = '用户不存在';
+      break;
+    case 'PASSWORD_NOT_MATCH':
+      statusCode = 400;
+      message = '用户密码不正确';
+      break;
+    case 'NOT_AUTHORIZATION':
+      statusCode = 401;
+      message = '请先登录';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';

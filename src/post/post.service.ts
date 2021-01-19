@@ -13,7 +13,7 @@ export const getPosts = async () => {
     user.name
   FROM post 
   LEFT JOIN user 
-    ON user.id = post.user_id`;
+    ON user.id = post.userId`;
   const [data] = await connection.promise().query(sql);
   return data;
 };
