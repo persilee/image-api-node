@@ -57,6 +57,10 @@ export const defaultErrorHandler = (
       statusCode = 401;
       message = '请先登录';
       break;
+    case 'USER_NOT_OWN_RESOURCE':
+      statusCode = 403;
+      message = '没有权限';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import * as userService from '../user/user.service';
 import { PUBLIC_KEY } from '../app/app.config';
 import { TokenPayload } from './auth.interface';
+import { possess } from './auth.service';
 
 /**
  * 验证用户登录
@@ -53,4 +54,30 @@ export const authGuard = (
   } catch (error) {
     next(new Error('NOT_AUTHORIZATION'));
   }
+};
+
+interface AccessControlOptions {
+  possession?: boolean;
+}
+
+export const accessControl = (options: AccessControlOptions) => {
+  return async (request: Request, response: Response, next: NextFunction) => {
+    const { possession } = options;
+    const { id: userId } = request.user;
+    if (userId == 1) return next();
+    const resourceIdParam = Object.keys(request.params)[0];
+    console.log(resourceIdParam);
+
+    const resourceType = resourceIdParam.replace('Id', '');
+    const resourceId = parseInt(request.params[resourceIdParam], 10);
+    if (possession) {
+      try {
+        const ownResource = await possess({ resourceId, resourceType, userId });
+        if (!ownResource) return next(new Error('USER_NOT_OWN_RESOURCE'));
+      } catch (error) {
+        return next(error);
+      }
+    }
+    next();
+  };
 };
