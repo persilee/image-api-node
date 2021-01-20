@@ -65,6 +65,14 @@ export const defaultErrorHandler = (
       statusCode = 404;
       message = '找不到文件';
       break;
+    case 'TAG_ALREADY_EXISTS':
+      statusCode = 409;
+      message = '标签已经存在';
+      break;
+    case 'POST_ALREADY_HAS_TAG':
+      statusCode = 409;
+      message = '内容标签已经存在';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';

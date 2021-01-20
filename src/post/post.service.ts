@@ -70,3 +70,16 @@ export const deletePost = async (postId: number) => {
   let [data] = await connection.promise().query(sql, postId);
   return data;
 };
+
+/**
+ * 删除文章标签
+ */
+export const deletePostTag = async (postId: number, tagId: number) => {
+  const sql = `
+    DELETE FROM post_tag
+    WHERE postId = ? AND tagId = ?
+  `;
+  const [data] = await connection.promise().query(sql, [postId, tagId]);
+
+  return data;
+};

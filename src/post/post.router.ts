@@ -38,4 +38,18 @@ router.delete(
   postController.remove,
 );
 
+router.post(
+  '/posts/:postId/tag',
+  authGuard,
+  accessControl({ possession: true }),
+  postController.storePostTag,
+);
+
+router.delete(
+  '/posts/:postId/tag',
+  authGuard,
+  accessControl({ possession: true }),
+  postController.destroyPostTag,
+);
+
 export default router;
