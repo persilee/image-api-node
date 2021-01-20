@@ -73,6 +73,10 @@ export const defaultErrorHandler = (
       statusCode = 409;
       message = '内容标签已经存在';
       break;
+    case 'UNABLE_TO_REPLY_THIS_COMMENT':
+      statusCode = 409;
+      message = '无法回复评论';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';

@@ -23,10 +23,11 @@
 			"/**",
 			" * $1",
 			" */",
-			"export const ${2:NAME}  = async (",
-			"$3",
-			") => {",
-			"  $4 ",
+			"export const ${2:NAME} = async (${3:PAEAMS}) => {",
+			"  const sql = `$4`;",
+			"  const [data] = await connection.promise().query(sql$5);",
+			"",
+			"  return data;",
 			"};"
 		]
 	}
