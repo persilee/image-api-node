@@ -12,5 +12,5 @@ connection.connect((e) => {
     return;
   }
 
-  console.log('success 😋');
+  console.log('😋 数据库连接成功');
 });

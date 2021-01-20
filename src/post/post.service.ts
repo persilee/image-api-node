@@ -10,7 +10,10 @@ export const getPosts = async () => {
     post.id, 
     post.content, 
     post.title,
-    user.name
+    JSON_OBJECT(
+      'id', user.id,
+      'name', user.name
+    ) as user
   FROM post 
   LEFT JOIN user 
     ON user.id = post.userId`;
