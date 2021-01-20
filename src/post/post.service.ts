@@ -1,23 +1,50 @@
 import { OkPacket } from 'mysql2/typings/mysql/lib/protocol/packets';
 import { connection } from '../app/database/mysql';
 import { PostModel } from './post.model';
+import { sqlFragment } from './post.provider';
 
 /**
  * 获取文章列表
  */
-export const getPosts = async () => {
-  const sql = `SELECT 
+export interface GetPostOptionsFilter {
+  name: string;
+  sql?: string;
+  param?: string;
+}
+interface GetPostOptions {
+  sort?: string;
+  filter?: GetPostOptionsFilter;
+}
+
+export interface GetPostOptionsPagination {
+  limit: number;
+  offset: number;
+}
+
+export const getPosts = async (options: GetPostOptions) => {
+  const { sort, filter } = options;
+  let params: Array<any> = [];
+  if (filter.param) {
+    params = [filter.param, ...params];
+  }
+  const sql = `
+  SELECT 
     post.id, 
     post.content, 
     post.title,
-    JSON_OBJECT(
-      'id', user.id,
-      'name', user.name
-    ) as user
+    ${sqlFragment.user},
+    ${sqlFragment.totalComments},
+    ${sqlFragment.file},
+    ${sqlFragment.tags}
   FROM post 
-  LEFT JOIN user 
-    ON user.id = post.userId`;
-  const [data] = await connection.promise().query(sql);
+    ${sqlFragment.leftJoinUser}
+    ${sqlFragment.leftJoinOneFile}
+    ${sqlFragment.leftJoinTag}
+  WHERE ${filter.sql}
+  GROUP BY post.id
+  ORDER BY ${sort}
+  `;
+  const [data] = await connection.promise().query(sql, params);
   return data;
 };
 

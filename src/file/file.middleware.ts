@@ -28,14 +28,16 @@ export const fileProcessor = async (
     return next(error);
   }
   //添加文件信息
-  const { imageSize, tags } = image['_exif'];
-  request.fileMetaData = {
-    width: imageSize.width,
-    height: imageSize.height,
-    metadata: JSON.stringify(tags),
-  };
-
-  //调整文件尺寸
-  imageReSize(image, request.file);
+  const exif = image['_exif'];
+  if (exif) {
+    const { imageSize, tags } = exif;
+    request.fileMetaData = {
+      width: imageSize.width,
+      height: imageSize.height,
+      metadata: JSON.stringify(tags),
+    };
+    //调整文件尺寸
+    imageReSize(image, request.file);
+  }
   next();
 };

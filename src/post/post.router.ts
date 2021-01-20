@@ -1,6 +1,6 @@
 import express from 'express';
 import * as postController from './post.controller';
-import { requestUrl } from '../app/app.middleware';
+import { filter, sort } from './post.middleware';
 import { accessControl, authGuard } from '../auth/auth.middleware';
 
 /**
@@ -11,7 +11,7 @@ const router = express.Router();
 /**
  * 获取文章列表
  */
-router.get('/posts', requestUrl, postController.index);
+router.get('/posts', sort, filter, postController.index);
 
 /**
  * 新增文章

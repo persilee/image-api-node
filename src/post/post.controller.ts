@@ -16,12 +16,12 @@ import {
 } from '../tag/tag.service';
 
 export const index = async (
-  _request: Request,
+  request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
-    const data = await getPosts();
+    const data = await getPosts({ sort: request.sort, filter: request.filter });
     response.send({
       code: 200,
       data: data,
