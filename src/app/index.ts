@@ -7,6 +7,7 @@ import fileRouter from '../file/file.router';
 import tagRouter from '../tag/tag.router';
 import commentRouter from '../comment/comment.router';
 import avatarRouter from '../avatar/avatar.router';
+import likeRouter from '../like/like.router';
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(
   tagRouter,
   commentRouter,
   avatarRouter,
+  likeRouter,
 );
 app.use(defaultErrorHandler);
 
