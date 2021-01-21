@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+import { eq } from 'lodash';
+import { POSTS_PER_PAGE } from '../app/app.config';
 
 /**
  * 排序方式
@@ -68,6 +70,25 @@ export const filter = async (
       param: <string>user,
     };
   }
+
+  next();
+};
+
+/**
+ * 列表分页
+ * @param request
+ * @param response
+ * @param next
+ */
+export const pagination = async (
+  request: Request,
+  _response: Response,
+  next: NextFunction,
+) => {
+  let { pageIndex = 1, pageSize = 10 } = request.query;
+  const limit = parseInt(<string>pageSize, 10);
+  const offset = limit * (parseInt(<string>pageIndex, 10) - 1);
+  request.pagination = { limit, offset };
 
   next();
 };

@@ -4,6 +4,7 @@ import {
   deletePost,
   deletePostTag,
   getPosts,
+  getPostTotal,
   updatePost,
 } from './post.service';
 import _ from 'lodash';
@@ -21,10 +22,20 @@ export const index = async (
   next: NextFunction,
 ) => {
   try {
-    const data = await getPosts({ sort: request.sort, filter: request.filter });
+    const total = await getPostTotal({
+      filter: request.filter,
+    });
+    const data = await getPosts({
+      sort: request.sort,
+      filter: request.filter,
+      pagination: request.pagination,
+    });
     response.send({
       code: 200,
-      data: data,
+      data: {
+        total: total,
+        data: data,
+      },
       message: 'success',
     });
   } catch (error) {

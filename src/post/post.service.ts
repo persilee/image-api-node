@@ -14,6 +14,7 @@ export interface GetPostOptionsFilter {
 interface GetPostOptions {
   sort?: string;
   filter?: GetPostOptionsFilter;
+  pagination?: GetPostOptionsPagination;
 }
 
 export interface GetPostOptionsPagination {
@@ -22,8 +23,12 @@ export interface GetPostOptionsPagination {
 }
 
 export const getPosts = async (options: GetPostOptions) => {
-  const { sort, filter } = options;
-  let params: Array<any> = [];
+  const {
+    sort,
+    filter,
+    pagination: { limit, offset },
+  } = options;
+  let params: Array<any> = [limit, offset];
   if (filter.param) {
     params = [filter.param, ...params];
   }
@@ -43,6 +48,8 @@ export const getPosts = async (options: GetPostOptions) => {
   WHERE ${filter.sql}
   GROUP BY post.id
   ORDER BY ${sort}
+  LIMIT ?
+  OFFSET ?
   `;
   const [data] = await connection.promise().query(sql, params);
   return data;
@@ -109,4 +116,24 @@ export const deletePostTag = async (postId: number, tagId: number) => {
   const [data] = await connection.promise().query(sql, [postId, tagId]);
 
   return data;
+};
+
+/**
+ * 统计文章总数
+ */
+export const getPostTotal = async (options: GetPostOptions) => {
+  const { filter } = options;
+  let params = [filter.param];
+  const sql = `
+    SELECT 
+      COUNT(DISTINCT post.id) AS total
+    FROM post 
+      ${sqlFragment.leftJoinUser}
+      ${sqlFragment.leftJoinOneFile}
+      ${sqlFragment.leftJoinTag}
+    WHERE ${filter.sql}
+  `;
+  const [data] = await connection.promise().query(sql, params);
+
+  return data[0].total;
 };
