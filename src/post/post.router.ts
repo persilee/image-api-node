@@ -52,4 +52,6 @@ router.delete(
   postController.destroyPostTag,
 );
 
+router.get('/posts/:postId', postController.show);
+
 export default router;

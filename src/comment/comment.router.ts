@@ -1,8 +1,11 @@
 import express from 'express';
 import { accessControl, authGuard } from '../auth/auth.middleware';
 import * as commentController from './comment.controller';
+import { filter } from './comment.middleware';
 
 const router = express.Router();
+
+router.get('/comments', filter, commentController.index);
 
 router.post('/comments', authGuard, commentController.store);
 

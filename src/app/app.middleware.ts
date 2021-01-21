@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
  */
 export const requestUrl = (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction,
 ) => {
   console.log(request.url);
@@ -24,9 +24,9 @@ export const requestUrl = (
  */
 export const defaultErrorHandler = (
   error: any,
-  request: Request,
+  _request: Request,
   response: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   if (error.message) {
     console.log(`🤔 ${error.message}`);
@@ -80,6 +80,10 @@ export const defaultErrorHandler = (
     case 'FILE_TYPE_NOT_ACCEPT':
       statusCode = 409;
       message = '文件类型不允许上传';
+      break;
+    case 'NOT_FOUND':
+      statusCode = 404;
+      message = '没有找到内容';
       break;
     default:
       statusCode = 500;

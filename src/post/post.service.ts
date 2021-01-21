@@ -4,7 +4,7 @@ import { PostModel } from './post.model';
 import { sqlFragment } from './post.provider';
 
 /**
- * 获取文章列表
+ * 过滤参数
  */
 export interface GetPostOptionsFilter {
   name: string;
@@ -17,6 +17,9 @@ interface GetPostOptions {
   pagination?: GetPostOptionsPagination;
 }
 
+/**
+ * 获取文章列表
+ */
 export interface GetPostOptionsPagination {
   limit: number;
   offset: number;
@@ -139,4 +142,31 @@ export const getPostTotal = async (options: GetPostOptions) => {
   const [data] = await connection.promise().query(sql, params);
 
   return data[0].total;
+};
+
+/**
+ * 按文章id查询
+ */
+export const getPostById = async (postId: number) => {
+  const sql = `
+    SELECT 
+      post.id, 
+      post.content, 
+      post.title,
+      ${sqlFragment.user},
+      ${sqlFragment.totalComments},
+      ${sqlFragment.file},
+      ${sqlFragment.tags},
+      ${sqlFragment.totalLikes}
+    FROM post 
+      ${sqlFragment.leftJoinUser}
+      ${sqlFragment.leftJoinOneFile}
+      ${sqlFragment.leftJoinTag}
+    WHERE post.id = ?
+  `;
+  const [data] = await connection.promise().query(sql, postId);
+  if (!data[0].id) {
+    throw new Error('NOT_FOUND');
+  }
+  return data[0];
 };

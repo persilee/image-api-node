@@ -3,6 +3,7 @@ import {
   createPost,
   deletePost,
   deletePostTag,
+  getPostById,
   getPosts,
   getPostTotal,
   updatePost,
@@ -16,6 +17,12 @@ import {
   postHasTag,
 } from '../tag/tag.service';
 
+/**
+ * 获取文章列表
+ * @param request
+ * @param response
+ * @param next
+ */
 export const index = async (
   request: Request,
   response: Response,
@@ -43,6 +50,12 @@ export const index = async (
   }
 };
 
+/**
+ * 新增文章
+ * @param request
+ * @param response
+ * @param next
+ */
 export const store = async (
   request: Request,
   response: Response,
@@ -63,6 +76,12 @@ export const store = async (
   }
 };
 
+/**
+ * 更新文章
+ * @param request
+ * @param response
+ * @param next
+ */
 export const update = async (
   request: Request,
   response: Response,
@@ -82,6 +101,12 @@ export const update = async (
   }
 };
 
+/**
+ * 删除文章
+ * @param request
+ * @param response
+ * @param next
+ */
 export const remove = async (
   request: Request,
   response: Response,
@@ -172,6 +197,31 @@ export const destroyPostTag = async (
 
   try {
     const data = await deletePostTag(parseInt(postId, 10), tagId);
+    response.status(200).send({
+      code: 200,
+      data: data,
+      message: 'success',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 按文章id获取文章
+ * @param request
+ * @param response
+ * @param next
+ */
+export const show = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { postId } = request.params;
+
+  try {
+    const data = await getPostById(parseInt(postId, 10));
     response.status(200).send({
       code: 200,
       data: data,

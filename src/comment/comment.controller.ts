@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { eq } from 'lodash';
 import { CommentModel } from './comment.model';
 import {
   createComment,
   deleteComment,
+  getComments,
   isReplyComment,
   updateComment,
 } from './comment.service';
@@ -123,6 +123,29 @@ export const destroy = async (
 
   try {
     const data = await deleteComment(parseInt(commentId, 10));
+    response.status(200).send({
+      code: 200,
+      data: data,
+      message: 'success',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 获取评论列表
+ * @param request
+ * @param response
+ * @param next
+ */
+export const index = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const data = await getComments({ filter: request.filter });
     response.status(200).send({
       code: 200,
       data: data,
