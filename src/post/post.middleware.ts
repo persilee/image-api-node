@@ -43,7 +43,7 @@ export const sort = async (
  */
 export const filter = async (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction,
 ) => {
   const { tag, user, action } = request.query;

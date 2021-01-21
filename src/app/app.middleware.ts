@@ -77,6 +77,10 @@ export const defaultErrorHandler = (
       statusCode = 409;
       message = '无法回复评论';
       break;
+    case 'FILE_TYPE_NOT_ACCEPT':
+      statusCode = 409;
+      message = '文件类型不允许上传';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';
