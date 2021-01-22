@@ -3,6 +3,7 @@
     "cwebp",
     "exif",
     "fieldname",
+    "prebuild",
     "webp"
   ]
 }

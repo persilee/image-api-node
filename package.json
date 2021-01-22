@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "tsc-watch --onSuccess \"node dist/main.js\"",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json"
   },
   "keywords": [],
   "author": "persilee <i@lishaoy.net>",
@@ -16,7 +18,8 @@
     "jimp": "^0.10.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.1.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
