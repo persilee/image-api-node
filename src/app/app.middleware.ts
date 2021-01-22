@@ -85,6 +85,14 @@ export const defaultErrorHandler = (
       statusCode = 404;
       message = '没有找到内容';
       break;
+    case 'USER_NOT_FOUND':
+      statusCode = 404;
+      message = '没有找到用户';
+      break;
+    case 'PASSWORD_IS_THE_SAME':
+      statusCode = 400;
+      message = '修改密码不能和原密码相同';
+      break;
     default:
       statusCode = 500;
       message = '服务请求失败';

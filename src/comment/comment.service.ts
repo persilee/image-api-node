@@ -1,5 +1,8 @@
 import { connection } from '../app/database/mysql';
-import { GetPostOptionsFilter } from '../post/post.service';
+import {
+  GetPostOptionsFilter,
+  GetPostOptionsPagination,
+} from '../post/post.service';
 import { CommentModel } from './comment.model';
 import { sqlFragment } from './comment.provider';
 
@@ -63,13 +66,17 @@ export const deleteComment = async (commentId: number) => {
  */
 interface GetCommentOptions {
   filter?: GetPostOptionsFilter;
+  pagination?: GetPostOptionsPagination;
 }
 /**
  * 获取评论列表
  */
 export const getComments = async (options: GetCommentOptions) => {
-  const { filter } = options;
-  let params: Array<any> = [];
+  const {
+    filter,
+    pagination: { limit, offset },
+  } = options;
+  let params: Array<any> = [limit, offset];
   if (filter.param) {
     params = [filter.param, ...params];
   }
@@ -80,6 +87,8 @@ export const getComments = async (options: GetCommentOptions) => {
       comment.content,
       ${sqlFragment.user},
       ${sqlFragment.post}
+      ${filter.name == 'userReplied' ? `, ${sqlFragment.repliedComment}` : ''}
+      ${filter.name != 'userReplied' ? `, ${sqlFragment.totalReplies}` : ''}
     FROM comment
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.leftJoinPost}
@@ -87,8 +96,54 @@ export const getComments = async (options: GetCommentOptions) => {
       ${filter.sql}
     GROUP BY comment.id
     ORDER BY comment.id DESC
+    LIMIT ?
+    OFFSET ?
   `;
   const [data] = await connection.promise().query(sql, params);
+
+  return data;
+};
+
+/**
+ * 统计评论总数
+ */
+export const getCommentTotal = async (options: GetCommentOptions) => {
+  const { filter } = options;
+  let params: Array<any> = [];
+  if (filter.param) {
+    params = [filter.param, ...params];
+  }
+  const sql = `
+    SELECT 
+      COUNT(
+        DISTINCT comment.id
+      ) as total
+    FROM comment
+    ${sqlFragment.leftJoinUser}
+    ${sqlFragment.leftJoinPost}
+    WHERE
+      ${filter.sql}
+  `;
+  const [data] = await connection.promise().query(sql, params);
+
+  return data[0].total;
+};
+
+/**
+ * 查询评论回复列表
+ */
+export const getCommentReplies = async (commentId: number) => {
+  const sql = `
+    SELECT 
+      comment.id,
+      comment.content,
+      ${sqlFragment.user}
+    FROM comment
+    ${sqlFragment.leftJoinUser}
+    WHERE comment.parentId = ?
+    GROUP BY comment.id
+  `;
+  const [data] = await connection.promise().query(sql, commentId);
 
   return data;
 };

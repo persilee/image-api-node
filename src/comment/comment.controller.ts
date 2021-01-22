@@ -3,7 +3,9 @@ import { CommentModel } from './comment.model';
 import {
   createComment,
   deleteComment,
+  getCommentReplies,
   getComments,
+  getCommentTotal,
   isReplyComment,
   updateComment,
 } from './comment.service';
@@ -145,7 +147,39 @@ export const index = async (
   next: NextFunction,
 ) => {
   try {
-    const data = await getComments({ filter: request.filter });
+    const totalCount = await getCommentTotal({ filter: request.filter });
+    const data = await getComments({
+      filter: request.filter,
+      pagination: request.pagination,
+    });
+    response.status(200).send({
+      code: 200,
+      data: {
+        total: totalCount,
+        data: data,
+      },
+      message: 'success',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 查询回复评论列表
+ * @param request
+ * @param response
+ * @param next
+ */
+export const indexReplies = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { commentId } = request.params;
+
+  try {
+    const data = await getCommentReplies(parseInt(commentId, 10));
     response.status(200).send({
       code: 200,
       data: data,

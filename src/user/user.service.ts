@@ -20,23 +20,56 @@ interface GetUserOptions {
 }
 
 /**
- * 根据用户名查找用户
+ * 查找用户
  * @param name
  */
-export const getUserByName = async (
-  name: string,
-  options: GetUserOptions = {},
-) => {
-  const { password } = options;
-  const sql = `
-    SELECT 
-      id, 
-      name
-      ${password ? ',password' : ''}
-    FROM user
-    WHERE name = ?
-  `;
-  const [data] = await connection.promise().query(sql, name);
+export const getUser = (condition: string) => {
+  return async (param: string | number, options: GetUserOptions = {}) => {
+    const { password } = options;
+    const sql = `
+      SELECT 
+        user.id,
+        user.name,
+        IF (
+          COUNT(avatar.id), 1, NULL
+        ) AS avatar
+        ${password ? ', password' : ''}
+      FROM
+        user
+      LEFT JOIN avatar
+        ON avatar.userId = user.id
+      WHERE 
+        ${condition} = ?
+    `;
 
-  return data[0];
+    const [data] = await connection.promise().query(sql, param);
+
+    console.log(data[0]);
+
+    return data[0].id ? data[0] : null;
+  };
+};
+
+/**
+ * 根据名字查找用户
+ */
+export const getUserByName = getUser('user.name');
+
+/**
+ * 根据id查找用户
+ */
+export const getUserById = getUser('user.id');
+
+/**
+ * 更新用户
+ */
+export const updateUser = async (userId: number, userData: UserModel) => {
+  const sql = `
+    UPDATE user
+    SET ?
+    WHERE user.id = ?
+  `;
+  const [data] = await connection.promise().query(sql, [userData, userId]);
+
+  return data;
 };
