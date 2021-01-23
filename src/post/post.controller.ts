@@ -16,6 +16,7 @@ import {
   findTagByName,
   postHasTag,
 } from '../tag/tag.service';
+import { dataParse } from '../util/dataParse';
 
 /**
  * 获取文章列表
@@ -37,11 +38,12 @@ export const index = async (
       filter: request.filter,
       pagination: request.pagination,
     });
+
     response.send({
       code: 200,
       data: {
         total: total,
-        data: data,
+        data: dataParse(data),
       },
       message: 'success',
     });

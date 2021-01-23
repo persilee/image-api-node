@@ -1,9 +1,21 @@
+import { APP_URL } from '../app/app.config';
+
 export const sqlFragment = {
   user: `
     JSON_OBJECT(
       'id', user.id,
       'name', user.name,
-      'avatar', IF(COUNT(avatar.id), 1, NULL)
+      'avatar', CAST(
+        IF(COUNT(avatar.id), 
+          GROUP_CONCAT(
+            DISTINCT JSON_OBJECT(
+              'largeAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=large'),
+              'mediumAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=medium'),
+              'smallAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=small')
+            )
+          ),
+        NULL)
+      AS JSON)
     ) as user
   `,
   leftJoinUser: `
@@ -37,7 +49,10 @@ export const sqlFragment = {
               DISTINCT JSON_OBJECT(
                 'id', file.id,
                 'width', file.width,
-                'height', file.height
+                'height', file.height,
+                'largeImageUrl', concat('${APP_URL}/files/', file.id, '/serve|@u003f|size=large'),
+                'mediumImageUrl', concat('${APP_URL}/files/', file.id, '/serve|@u003f|size=medium'),
+                'thumbnailImageUrl', concat('${APP_URL}/files/', file.id, '/serve|@u003f|size=thumbnail')
               ) ORDER BY file.id DESC
             ),
           ']'
