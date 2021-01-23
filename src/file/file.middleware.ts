@@ -57,6 +57,7 @@ export const fileProcessor = async (
   }
   //添加文件信息
   const exif = image['_exif'];
+
   if (exif) {
     const { imageSize, tags } = exif;
     request.fileMetaData = {
@@ -66,6 +67,11 @@ export const fileProcessor = async (
     };
     //调整文件尺寸
     imageReSize(image, request.file);
+  } else {
+    request.fileMetaData = {
+      width: image.bitmap.width,
+      height: image.bitmap.height,
+    };
   }
   next();
 };
