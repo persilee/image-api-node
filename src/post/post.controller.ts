@@ -43,7 +43,7 @@ export const index = async (
       code: 200,
       data: {
         total: total,
-        data: dataParse(data),
+        posts: dataParse(data),
       },
       message: 'success',
     });
