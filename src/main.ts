@@ -1,6 +1,12 @@
 import app from './app';
+import http from 'http';
 import { APP_PORT } from './app/app.config';
 import { connection } from './app/database/mysql';
+import { createTerminus } from '@godaddy/terminus';
+
+const server = http.createServer(app);
+
+createTerminus(server);
 
 app.listen(APP_PORT, () => {
   console.log('😜 应用已启动');
