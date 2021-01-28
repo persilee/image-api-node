@@ -8,9 +8,11 @@ import tagRouter from '../tag/tag.router';
 import commentRouter from '../comment/comment.router';
 import avatarRouter from '../avatar/avatar.router';
 import likeRouter from '../like/like.router';
+import { currentUser } from '../auth/auth.middleware';
 
 const app = express();
 app.use(express.json());
+app.use(currentUser);
 app.use(
   postRouter,
   userRouter,

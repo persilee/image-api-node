@@ -33,10 +33,12 @@ export const index = async (
     const total = await getPostTotal({
       filter: request.filter,
     });
+    const { id: userId } = request.user;
     const data = await getPosts({
       sort: request.sort,
       filter: request.filter,
       pagination: request.pagination,
+      userId: userId,
     });
 
     response.send({

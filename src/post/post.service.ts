@@ -15,6 +15,7 @@ interface GetPostOptions {
   sort?: string;
   filter?: GetPostOptionsFilter;
   pagination?: GetPostOptionsPagination;
+  userId?: number;
 }
 
 /**
@@ -30,10 +31,14 @@ export const getPosts = async (options: GetPostOptions) => {
     sort,
     filter,
     pagination: { limit, offset },
+    userId,
   } = options;
   let params: Array<any> = [limit, offset];
   if (filter.param) {
     params = [filter.param, ...params];
+  }
+  if (userId) {
+    params = [userId, ...params];
   }
   const sql = `
   SELECT 
@@ -43,7 +48,8 @@ export const getPosts = async (options: GetPostOptions) => {
     ${sqlFragment.user},
     ${sqlFragment.totalComments},
     ${sqlFragment.file},
-    ${sqlFragment.tags},
+    ${sqlFragment.tags}
+    ${userId ? `, ${sqlFragment.liked} ` : ''},
     ${sqlFragment.totalLikes}
   FROM post 
     ${sqlFragment.leftJoinUser}
@@ -56,6 +62,8 @@ export const getPosts = async (options: GetPostOptions) => {
   LIMIT ?
   OFFSET ?
   `;
+
+  console.log(sql);
 
   const [data] = await connection.promise().query(sql, params);
 

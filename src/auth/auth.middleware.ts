@@ -33,27 +33,54 @@ export const validateLogin = async (
 };
 
 /**
- * 验证token有效期
+ * 验证用户身份
  * @param request
  * @param response
  * @param next
  */
 export const authGuard = (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction,
 ) => {
+  return request.user.id ? next() : next(new Error('UNAUTHORIZED'));
+};
+
+/**
+ * 验证是否是当前用户
+ */
+export const currentUser = (
+  request: Request,
+  _response: Response,
+  next: NextFunction,
+) => {
+  let user = {
+    // 未登录的用户
+    id: null,
+    name: 'anonymous',
+  };
+
   try {
+    // 提取 Authorization
     const authorization = request.header('Authorization');
-    if (!authorization) throw new Error();
+
+    // 提取 JWT 令牌
     const token = authorization.replace('Bearer ', '');
-    if (!token) throw new Error();
-    const decoded = jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] });
-    request.user = <TokenPayload>decoded;
-    next();
-  } catch (error) {
-    next(new Error('NOT_AUTHORIZATION'));
-  }
+
+    if (token) {
+      // 验证令牌
+      const decoded = jwt.verify(token, PUBLIC_KEY, {
+        algorithms: ['RS256'],
+      });
+
+      user = decoded as any;
+    }
+  } catch (error) {}
+
+  // 在请求里添加当前用户
+  request.user = user;
+
+  next();
 };
 
 interface AccessControlOptions {
@@ -61,7 +88,7 @@ interface AccessControlOptions {
 }
 
 export const accessControl = (options: AccessControlOptions) => {
-  return async (request: Request, response: Response, next: NextFunction) => {
+  return async (request: Request, _response: Response, next: NextFunction) => {
     const { possession } = options;
     const { id: userId } = request.user;
     if (userId == 1) return next();
