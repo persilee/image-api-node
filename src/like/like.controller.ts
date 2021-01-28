@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { createUserLikePost, deleteLikePost } from './like.service';
+import {
+  createUserLikePost,
+  deleteLikePost,
+  isLikedPost,
+} from './like.service';
 
 /**
- * 点赞文章
+ * 点赞文章(点击创建，再点取消)
  * @param request
  * @param response
  * @param next
@@ -16,12 +20,25 @@ export const store = async (
   const { id: userId } = request.user;
 
   try {
-    const data = await createUserLikePost(userId, parseInt(postId, 10));
-    response.status(201).send({
-      code: 201,
-      data: data,
-      message: 'success',
-    });
+    const isLiked = await isLikedPost(userId, parseInt(postId, 10));
+
+    console.log(isLiked);
+
+    if (isLiked) {
+      const data = await deleteLikePost(userId, parseInt(postId, 10));
+      response.status(200).send({
+        code: 200,
+        data: data,
+        message: 'success',
+      });
+    } else {
+      const data = await createUserLikePost(userId, parseInt(postId, 10));
+      response.status(201).send({
+        code: 201,
+        data: data,
+        message: 'success',
+      });
+    }
   } catch (error) {
     next(error);
   }

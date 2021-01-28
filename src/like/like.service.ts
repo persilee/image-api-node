@@ -25,3 +25,23 @@ export const deleteLikePost = async (userId: number, postId: number) => {
 
   return data;
 };
+
+/**
+ * 是否点过赞
+ */
+export const isLikedPost = async (userId: number, postId: number) => {
+  const sql = `
+    SELECT 
+      COUNT(*) AS liked 
+    FROM 
+      user_like_post 
+    WHERE 
+      user_like_post.postId = ?
+    AND 
+      user_like_post.userId = ?
+  `;
+
+  const [data] = await connection.promise().query(sql, [postId, userId]);
+
+  return data[0].liked ? true : false;
+};
