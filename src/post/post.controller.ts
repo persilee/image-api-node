@@ -228,7 +228,7 @@ export const show = async (
     const data = await getPostById(parseInt(postId, 10));
     response.status(200).send({
       code: 200,
-      data: data,
+      data: dataParse(data),
       message: 'success',
     });
   } catch (error) {
