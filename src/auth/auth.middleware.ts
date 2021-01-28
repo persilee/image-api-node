@@ -14,7 +14,7 @@ import { possess } from './auth.service';
  */
 export const validateLogin = async (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction,
 ) => {
   const { name, password } = request.body;
@@ -43,7 +43,7 @@ export const authGuard = (
   _response: Response,
   next: NextFunction,
 ) => {
-  return request.user.id ? next() : next(new Error('UNAUTHORIZED'));
+  return request.user.id ? next() : next(new Error('NOT_AUTHORIZATION'));
 };
 
 /**
