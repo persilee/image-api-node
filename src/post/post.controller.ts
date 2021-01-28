@@ -223,9 +223,10 @@ export const show = async (
   next: NextFunction,
 ) => {
   const { postId } = request.params;
+  const { id: userId } = request.user;
 
   try {
-    const data = await getPostById(parseInt(postId, 10));
+    const data = await getPostById(userId, parseInt(postId, 10));
     response.status(200).send({
       code: 200,
       data: dataParse(data),

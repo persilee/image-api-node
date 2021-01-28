@@ -157,7 +157,7 @@ export const getPostTotal = async (options: GetPostOptions) => {
 /**
  * 按文章id查询
  */
-export const getPostById = async (postId: number) => {
+export const getPostById = async (userId: number, postId: number) => {
   const sql = `
     SELECT 
       post.id, 
@@ -166,7 +166,8 @@ export const getPostById = async (postId: number) => {
       ${sqlFragment.user},
       ${sqlFragment.totalComments},
       ${sqlFragment.file},
-      ${sqlFragment.tags},
+      ${sqlFragment.tags}
+      ${userId ? `, ${sqlFragment.liked} ` : ''},
       ${sqlFragment.totalLikes}
     FROM post 
       ${sqlFragment.leftJoinUser}
@@ -174,7 +175,7 @@ export const getPostById = async (postId: number) => {
       ${sqlFragment.leftJoinTag}
     WHERE post.id = ?
   `;
-  const [data] = await connection.promise().query(sql, postId);
+  const [data] = await connection.promise().query(sql, [userId, postId]);
   if (!data[0].id) {
     throw new Error('NOT_FOUND');
   }
