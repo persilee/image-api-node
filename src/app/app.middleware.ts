@@ -34,23 +34,23 @@ export const defaultErrorHandler = (
   let statusCode: number, message: string;
   switch (error.message) {
     case 'NAME_IS_REQUIRED':
-      statusCode = 400;
+      statusCode = 405;
       message = '用户名不能为空';
       break;
     case 'PASSWORD_IS_REQUIRED':
-      statusCode = 400;
+      statusCode = 406;
       message = '用户密码不能为空';
       break;
     case 'USER_ALREADY_EXIST':
-      statusCode = 409;
+      statusCode = 407;
       message = '用户名已存在';
       break;
     case 'USER_NOT_EXIST':
-      statusCode = 400;
+      statusCode = 408;
       message = '用户不存在';
       break;
     case 'PASSWORD_NOT_MATCH':
-      statusCode = 400;
+      statusCode = 409;
       message = '用户密码不正确';
       break;
     case 'NOT_AUTHORIZATION':
@@ -66,23 +66,23 @@ export const defaultErrorHandler = (
       message = '找不到文件';
       break;
     case 'TAG_ALREADY_EXISTS':
-      statusCode = 409;
+      statusCode = 410;
       message = '标签已经存在';
       break;
     case 'POST_ALREADY_HAS_TAG':
-      statusCode = 409;
+      statusCode = 411;
       message = '内容标签已经存在';
       break;
     case 'UNABLE_TO_REPLY_THIS_COMMENT':
-      statusCode = 409;
+      statusCode = 412;
       message = '无法回复评论';
       break;
     case 'FILE_TYPE_NOT_ACCEPT':
-      statusCode = 409;
+      statusCode = 413;
       message = '文件类型不允许上传';
       break;
     case 'NOT_FOUND':
-      statusCode = 404;
+      statusCode = 402;
       message = '没有找到内容';
       break;
     case 'USER_NOT_FOUND':
