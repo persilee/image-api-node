@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   createPost,
+  createViews,
   deletePost,
   deletePostTag,
   getPostById,
@@ -223,15 +224,29 @@ export const show = async (
   next: NextFunction,
 ) => {
   const { postId } = request.params;
+  const { notView } = request.body;
   const { id: userId } = request.user;
+  console.log(notView);
 
   try {
-    const data = await getPostById(userId, parseInt(postId, 10));
-    response.status(200).send({
-      code: 200,
-      data: dataParse(data),
-      message: 'success',
-    });
+    if (notView) {
+      const data = await getPostById(userId, parseInt(postId, 10));
+      response.status(200).send({
+        code: 200,
+        data: dataParse(data),
+        message: 'success',
+      });
+      return next();
+    }
+    const views = await createViews(parseInt(postId, 10));
+    if (views) {
+      const data = await getPostById(userId, parseInt(postId, 10));
+      response.status(200).send({
+        code: 200,
+        data: dataParse(data),
+        message: 'success',
+      });
+    }
   } catch (error) {
     next(error);
   }

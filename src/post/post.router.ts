@@ -52,6 +52,9 @@ router.delete(
   postController.destroyPostTag,
 );
 
+/**
+ * 根据id获取文章
+ */
 router.get('/posts/:postId', postController.show);
 
 export default router;

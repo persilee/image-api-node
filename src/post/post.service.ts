@@ -158,6 +158,8 @@ export const getPostTotal = async (options: GetPostOptions) => {
  * 按文章id查询
  */
 export const getPostById = async (userId: number, postId: number) => {
+  const params = userId ? [userId, postId] : postId;
+
   const sql = `
     SELECT 
       post.id, 
@@ -175,9 +177,23 @@ export const getPostById = async (userId: number, postId: number) => {
       ${sqlFragment.leftJoinTag}
     WHERE post.id = ?
   `;
-  const [data] = await connection.promise().query(sql, [userId, postId]);
+  const [data] = await connection.promise().query(sql, params);
   if (!data[0].id) {
     throw new Error('NOT_FOUND');
   }
   return data[0];
+};
+
+/**
+ * 查看次数
+ */
+export const createViews = async (postId: number) => {
+  const sql = `
+    UPDATE post 
+    SET views = views + 1
+    WHERE id = ?
+  `;
+  const [data] = await connection.promise().query(sql, postId);
+
+  return (data as OkPacket).changedRows ? true : false;
 };
