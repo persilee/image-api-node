@@ -224,7 +224,7 @@ export const show = async (
   next: NextFunction,
 ) => {
   const { postId } = request.params;
-  const { notView } = request.body;
+  const { notView } = request.query;
   const { id: userId } = request.user;
   console.log(notView);
 
