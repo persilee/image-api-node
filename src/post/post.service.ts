@@ -9,7 +9,7 @@ import { sqlFragment } from './post.provider';
 export interface GetPostOptionsFilter {
   name: string;
   sql?: string;
-  param?: string;
+  param?: string | number;
 }
 interface GetPostOptions {
   sort?: string;
@@ -40,11 +40,14 @@ export const getPosts = async (options: GetPostOptions) => {
   if (userId) {
     params = [userId, ...params];
   }
+  console.log(params);
+
   const sql = `
   SELECT 
     post.id, 
     post.content, 
     post.title,
+    category.name as category,
     post.views,
     ${sqlFragment.user},
     ${sqlFragment.totalComments},
@@ -56,6 +59,7 @@ export const getPosts = async (options: GetPostOptions) => {
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.leftJoinOneFile}
     ${sqlFragment.leftJoinTag}
+    ${sqlFragment.leftJoinCategory}
     ${filter.name == 'userLiked' ? sqlFragment.innerJoinUserLikePost : ''}
   WHERE ${filter.sql}
   GROUP BY post.id
@@ -147,6 +151,7 @@ export const getPostTotal = async (options: GetPostOptions) => {
       ${sqlFragment.leftJoinUser}
       ${sqlFragment.leftJoinOneFile}
       ${sqlFragment.leftJoinTag}
+      ${sqlFragment.leftJoinCategory}
       ${filter.name == 'userLiked' ? sqlFragment.innerJoinUserLikePost : ''}
     WHERE ${filter.sql}
   `;
@@ -166,6 +171,7 @@ export const getPostById = async (userId: number, postId: number) => {
       post.id, 
       post.content, 
       post.title,
+      category.name as category,
       post.views,
       ${sqlFragment.user},
       ${sqlFragment.totalComments},
@@ -177,6 +183,7 @@ export const getPostById = async (userId: number, postId: number) => {
       ${sqlFragment.leftJoinUser}
       ${sqlFragment.leftJoinOneFile}
       ${sqlFragment.leftJoinTag}
+      ${sqlFragment.leftJoinCategory}
     WHERE post.id = ?
   `;
   const [data] = await connection.promise().query(sql, params);

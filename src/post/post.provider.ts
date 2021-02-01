@@ -103,4 +103,8 @@ export const sqlFragment = {
       WHERE user_like_post.userId = ? AND user_like_post.postId = post.id
     ) AS liked
   `,
+  leftJoinCategory: `
+    LEFT JOIN category 
+    ON post.categoryId = category.id
+  `,
 };

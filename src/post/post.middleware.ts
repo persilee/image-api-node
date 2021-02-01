@@ -44,7 +44,7 @@ export const filter = async (
   _response: Response,
   next: NextFunction,
 ) => {
-  const { tag, user, action } = request.query;
+  const { tag, user, action, categoryId } = request.query;
 
   request.filter = {
     name: 'default',
@@ -75,6 +75,15 @@ export const filter = async (
       name: 'userLiked',
       sql: 'user_like_post.userId = ?',
       param: <string>user,
+    };
+  }
+
+  //按分类筛选
+  if (action == 'category') {
+    request.filter = {
+      name: 'category',
+      sql: 'category.id = ?',
+      param: parseInt(<string>categoryId, 10),
     };
   }
 

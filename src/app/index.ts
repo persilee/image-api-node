@@ -9,11 +9,13 @@ import commentRouter from '../comment/comment.router';
 import avatarRouter from '../avatar/avatar.router';
 import likeRouter from '../like/like.router';
 import { currentUser } from '../auth/auth.middleware';
+import categoryRouter from '../category/category.router';
 
 const app = express();
 app.use(express.json());
 app.use(currentUser);
 app.use(
+  categoryRouter,
   postRouter,
   userRouter,
   authRouter,
