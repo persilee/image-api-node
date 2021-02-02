@@ -66,11 +66,11 @@ export const store = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { title, content } = request.body;
+  const { title, content, categoryId } = request.body;
   const { id: userId } = request.user;
 
   try {
-    const data = await createPost({ title, content, userId });
+    const data = await createPost({ title, content, userId, categoryId });
     response.send({
       code: 200,
       data: data,
