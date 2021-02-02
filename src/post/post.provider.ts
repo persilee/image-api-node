@@ -36,7 +36,7 @@ export const sqlFragment = {
       SELECT * FROM file
       WHERE file.postId = post.id
       ORDER BY file.id DESC
-      LIMIT 2
+      LIMIT 9
     ) AS file ON file.postId = post.id
   `,
   file: `
