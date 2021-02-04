@@ -5,7 +5,7 @@ import { connection } from '../app/database/mysql';
  */
 export const selectCategory = async () => {
   const sql = `
-    SELECT name FROM category
+    SELECT * FROM category
   `;
   const [data] = await connection.promise().query(sql);
 

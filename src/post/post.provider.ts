@@ -14,7 +14,14 @@ export const sqlFragment = {
               'smallAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=small')
             )
           ),
-        NULL)
+          GROUP_CONCAT(
+            DISTINCT JSON_OBJECT(
+              'largeAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+              'mediumAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+              'smallAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png'
+            )
+          )
+        )
       AS JSON)
     ) as user
   `,

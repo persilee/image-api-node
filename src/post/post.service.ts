@@ -40,7 +40,7 @@ export const getPosts = async (options: GetPostOptions) => {
   if (userId) {
     params = [userId, ...params];
   }
-  console.log(params);
+  console.log(`params: ${params}`);
 
   const sql = `
   SELECT 
