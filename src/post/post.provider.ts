@@ -131,9 +131,9 @@ export const sqlFragment = {
                 'id', cover.id,
                 'width', cover.width,
                 'height', cover.height,
-                'largeImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=large'),
-                'mediumImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=medium'),
-                'small', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=thumbnail')
+                'largeImageUrl', concat('${APP_URL}/files/', cover.id, '/serve|@u003f|size=large'),
+                'mediumImageUrl', concat('${APP_URL}/files/', cover.id, '/serve|@u003f|size=medium'),
+                'small', concat('${APP_URL}/files/', cover.id, '/serve|@u003f|size=thumbnail')
               ) ORDER BY cover.id DESC
             ),
         NULL
