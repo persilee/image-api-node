@@ -51,6 +51,7 @@ export const getPosts = async (options: GetPostOptions) => {
     post.views,
     ${sqlFragment.user},
     ${sqlFragment.totalComments},
+    ${sqlFragment.coverImage},
     ${sqlFragment.file},
     ${sqlFragment.tags}
     ${userId ? `, ${sqlFragment.liked} ` : ''},
@@ -58,6 +59,7 @@ export const getPosts = async (options: GetPostOptions) => {
   FROM post 
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.leftJoinOneFile}
+    ${sqlFragment.leftJoinCover}
     ${sqlFragment.leftJoinTag}
     ${sqlFragment.leftJoinCategory}
     ${filter.name == 'userLiked' ? sqlFragment.innerJoinUserLikePost : ''}
@@ -175,6 +177,7 @@ export const getPostById = async (userId: number, postId: number) => {
       post.views,
       ${sqlFragment.user},
       ${sqlFragment.totalComments},
+      ${sqlFragment.coverImage},
       ${sqlFragment.file},
       ${sqlFragment.tags}
       ${userId ? `, ${sqlFragment.liked} ` : ''},
@@ -182,6 +185,7 @@ export const getPostById = async (userId: number, postId: number) => {
     FROM post 
       ${sqlFragment.leftJoinUser}
       ${sqlFragment.leftJoinOneFile}
+      ${sqlFragment.leftJoinCover}
       ${sqlFragment.leftJoinTag}
       ${sqlFragment.leftJoinCategory}
     WHERE post.id = ?

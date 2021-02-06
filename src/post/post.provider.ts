@@ -114,4 +114,30 @@ export const sqlFragment = {
     LEFT JOIN category 
     ON post.categoryId = category.id
   `,
+  leftJoinCover: `
+    LEFT JOIN LATERAL(
+	  	SELECT * FROM file
+	  	WHERE file.isCover = 1 AND file.postId = post.id
+	  	GROUP BY file.id
+	  	LIMIT 1
+    ) AS cover ON cover.postId = post.id and cover.isCover = 1 
+  `,
+  coverImage: `
+    CAST(
+      IF(
+        COUNT(cover.id),
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', cover.id,
+                'width', cover.width,
+                'height', cover.height,
+                'largeImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=large'),
+                'mediumImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=medium'),
+                'small', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=thumbnail')
+              ) ORDER BY cover.id DESC
+            ),
+        NULL
+      ) AS JSON
+    ) AS coverImage
+  `,
 };
