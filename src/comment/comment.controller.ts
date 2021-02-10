@@ -9,6 +9,7 @@ import {
   isReplyComment,
   updateComment,
 } from './comment.service';
+import { dataParse } from '../util/dataParse';
 
 /**
  * 新增评论
@@ -156,7 +157,7 @@ export const index = async (
       code: 200,
       data: {
         total: totalCount,
-        data: data,
+        data: dataParse(data),
       },
       message: 'success',
     });
@@ -182,7 +183,7 @@ export const indexReplies = async (
     const data = await getCommentReplies(parseInt(commentId, 10));
     response.status(200).send({
       code: 200,
-      data: data,
+      data: dataParse(data),
       message: 'success',
     });
   } catch (error) {

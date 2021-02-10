@@ -1,3 +1,5 @@
+import { APP_URL } from '../app/app.config';
+
 export const sqlFragment = {
   leftJoinUser: `
     LEFT JOIN user
@@ -9,8 +11,25 @@ export const sqlFragment = {
     JSON_OBJECT(
       'id', user.id,
       'name', user.name,
-      'avatar', IF(COUNT(avatar.id), 1, NULL)
-    ) AS user
+      'avatar', CAST(
+        IF(COUNT(avatar.id), 
+          GROUP_CONCAT(
+            DISTINCT JSON_OBJECT(
+              'largeAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=large'),
+              'mediumAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=medium'),
+              'smallAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=small')
+            )
+          ),
+          GROUP_CONCAT(
+            DISTINCT JSON_OBJECT(
+              'largeAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+              'mediumAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+              'smallAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png'
+            )
+          )
+        )
+      AS JSON)
+    ) as user
   `,
   leftJoinPost: `
     LEFT JOIN post

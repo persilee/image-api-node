@@ -194,6 +194,8 @@ export const getPostById = async (userId: number, postId: number) => {
       ${sqlFragment.leftJoinCategory}
     WHERE post.id = ?
   `;
+  console.log(sql);
+
   const [data] = await connection.promise().query(sql, params);
   if (!data[0].id) {
     throw new Error('NOT_FOUND');
