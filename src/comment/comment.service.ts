@@ -85,6 +85,8 @@ export const getComments = async (options: GetCommentOptions) => {
     SELECT 
       comment.id,
       comment.content,
+      comment.createdAt,
+      comment.updatedAt,
       ${sqlFragment.user},
       ${sqlFragment.post}
       ${filter.name == 'userReplied' ? `, ${sqlFragment.repliedComment}` : ''}
@@ -137,6 +139,8 @@ export const getCommentReplies = async (commentId: number) => {
     SELECT 
       comment.id,
       comment.content,
+      comment.createdAt,
+      comment.updatedAt,
       ${sqlFragment.user}
     FROM comment
     ${sqlFragment.leftJoinUser}
