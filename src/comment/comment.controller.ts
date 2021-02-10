@@ -157,7 +157,7 @@ export const index = async (
       code: 200,
       data: {
         total: totalCount,
-        data: dataParse(data),
+        comments: dataParse(data),
       },
       message: 'success',
     });

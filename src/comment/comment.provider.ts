@@ -39,7 +39,7 @@ export const sqlFragment = {
     JSON_OBJECT(
       'id', post.id,
       'title', post.title
-    ) AS post
+    ) AS postInfo
   `,
   repliedComment: `
     (
