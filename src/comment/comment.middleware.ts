@@ -21,7 +21,7 @@ export const filter = async (
   if (post && !user && !action) {
     request.filter = {
       name: 'postComments',
-      sql: 'comment.parentId IS NULL AND comment.postId = ?',
+      sql: 'comment.postId = ?',
       param: <string>post,
     };
   }

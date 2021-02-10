@@ -85,6 +85,7 @@ export const getComments = async (options: GetCommentOptions) => {
     SELECT 
       comment.id,
       comment.content,
+      ${sqlFragment.repComment},
       comment.createdAt,
       comment.updatedAt,
       ${sqlFragment.user},
@@ -94,6 +95,7 @@ export const getComments = async (options: GetCommentOptions) => {
     FROM comment
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.leftJoinPost}
+     ${sqlFragment.leftJoinRepComment}
     WHERE
       ${filter.sql}
     GROUP BY comment.id
@@ -101,6 +103,9 @@ export const getComments = async (options: GetCommentOptions) => {
     LIMIT ?
     OFFSET ?
   `;
+
+  console.log(sql);
+
   const [data] = await connection.promise().query(sql, params);
 
   return data;

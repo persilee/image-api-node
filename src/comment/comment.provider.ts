@@ -61,4 +61,19 @@ export const sqlFragment = {
         reply.parentId = comment.id
     ) AS totalReplies
   `,
+  leftJoinRepComment: `
+    LEFT JOIN 
+    (
+      SELECT comment.content, comment.id, comment.userId, user.name  FROM comment 
+      LEFT JOIN user ON user.id = comment.userId 
+      WHERE comment.id in (SELECT parentId FROM comment WHERE comment.parentId IS NOT NULL) 
+	  ) rep 
+	  ON rep.id = comment.parentId
+  `,
+  repComment: `
+    IF(rep.content IS NOT NULL, JSON_OBJECT(
+      'content', rep.content,
+      'userName', rep.name
+    ), NULL) AS repComment
+  `,
 };
