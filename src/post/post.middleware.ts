@@ -23,6 +23,10 @@ export const sort = async (
     case 'most_comments':
       sqlSort = 'totalComments DESC, post.id DESC';
       break;
+    case 'recommend':
+      sqlSort =
+        '(views  + totalLikes*100 + totalComments*10) DESC, updatedAt DESC';
+      break;
     default:
       sqlSort = 'post.id DESC';
       break;

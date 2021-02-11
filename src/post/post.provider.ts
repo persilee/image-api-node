@@ -35,7 +35,6 @@ export const sqlFragment = {
     (
       SELECT COUNT(comment.id) FROM comment
       WHERE comment.postId = post.id
-      GROUP BY comment.postId
 	  ) as totalComments
   `,
   leftJoinOneFile: `
