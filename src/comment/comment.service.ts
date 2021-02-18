@@ -1,3 +1,4 @@
+import { OkPacket } from 'mysql2';
 import { connection } from '../app/database/mysql';
 import {
   GetPostOptionsFilter,
@@ -15,7 +16,7 @@ export const createComment = async (comment: CommentModel) => {
     SET ?
   `;
 
-  const [data] = await connection.promise().query(sql, comment);
+  let [data] = await connection.promise().query(sql, comment);
 
   return data;
 };

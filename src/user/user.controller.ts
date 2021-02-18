@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { UserModel } from './user.model';
 import * as userService from './user.service';
 import _ from 'lodash';
+import { dataParse } from '../util/dataParse';
 
 /**
  * 注册用户
@@ -45,7 +46,7 @@ export const show = async (
     if (!data) return next(new Error('USER_NOT_FOUND'));
     response.status(200).send({
       code: 200,
-      data: data,
+      data: dataParse(data),
       message: 'success',
     });
   } catch (error) {

@@ -1,5 +1,6 @@
 import { connection } from '../app/database/mysql';
 import { UserModel } from './user.model';
+import { APP_URL } from '../app/app.config';
 
 /**
  * 新增用户
@@ -30,9 +31,25 @@ export const getUser = (condition: string) => {
       SELECT 
         user.id,
         user.name,
-        IF (
-          COUNT(avatar.id), 1, NULL
-        ) AS avatar
+        (SELECT COUNT(post.userId) FROM post WHERE post.userId = user.id) as totalPosts,
+        CAST( 
+        		IF(COUNT(avatar.id), 
+		          GROUP_CONCAT(
+		            DISTINCT JSON_OBJECT(
+		              'largeAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=large'),
+		              'mediumAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=medium'),
+		              'smallAvatarUrl', concat('${APP_URL}/avatar/', user.id, '|@u003f|size=small')
+		            )
+		          ),
+		          GROUP_CONCAT(
+		            DISTINCT JSON_OBJECT(
+		              'largeAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+		              'mediumAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png',
+		              'smallAvatarUrl', 'https://cdn.lishaoy.net/links/notes1.png'
+		            )
+		          )
+		        )
+        	AS json) as avatar
         ${password ? ', password' : ''}
       FROM
         user
