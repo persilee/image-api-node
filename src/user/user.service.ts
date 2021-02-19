@@ -32,6 +32,11 @@ export const getUser = (condition: string) => {
         user.id,
         user.name,
         (SELECT COUNT(post.userId) FROM post WHERE post.userId = user.id) as totalPosts,
+        (
+          SELECT COUNT(user_like_post.postId)
+          FROM user_like_post
+          WHERE user_like_post.userId = user.id
+        ) AS totalLikes,
         CAST( 
         		IF(COUNT(avatar.id), 
 		          GROUP_CONCAT(
